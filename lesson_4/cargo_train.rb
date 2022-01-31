@@ -1,8 +1,7 @@
 
 class CargoTrain < Train
 
-  def initialize(wagons_count)
-    wagons = wagons_count.times.map { CargoWagon.new }
+  def initialize(wagons)
     super(:cargo, wagons)
   end
 end

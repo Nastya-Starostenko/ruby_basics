@@ -1,9 +1,10 @@
 class Wagon
-
   attr_reader :type
-  attr_accessor :train, :number, :info
 
   def initialize(type)
     @type = type
   end
+  
+  private
+  attr_accessor :train, :number, :info
 end

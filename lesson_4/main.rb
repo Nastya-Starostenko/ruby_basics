@@ -22,7 +22,8 @@ class Main
     stations << Station.new('Kharkiv')
     stations << Station.new('Kiev')
     routes << Route.new(stations.first, stations.last)
-    trains << CargoTrain.new(2)
+    wagons << CargoWagon.new
+    trains << CargoTrain.new([wagons.first])
   end
 
   def start
@@ -85,10 +86,8 @@ class Main
   end
 
   def create_train(type)
-    puts 'How many wagons to add?'
-    wagons_count = gets.to_i
-    new_train = type == :passenger ? PassengerTrain.new(wagons_count) : CargoTrain.new(wagons_count)
-    trains << new_train
+    wagons = create_wagons_by_type(type)
+    trains << type == :passenger ? PassengerTrain.new(wagons) : CargoTrain.new(wagons)
     puts "Train added: #{trains.last.info}"
   end
 
@@ -171,10 +170,9 @@ class Main
   def add_wagon_for_train
     return unless valid_data?(trains)
 
-    puts "How many wagos need add?"
-    count = gets.to_i
     train = selected_train
-    train.add_wagons(count)
+    wagons = create_wagons_by_type(train.type)
+    train.add_wagons(wagons)
     puts "#{train.info}"
 
     back_to_menu
@@ -191,6 +189,13 @@ class Main
 
     back_to_menu
   end
+
+  def create_wagons_by_type(type)
+    puts 'How many wagons to add?'
+    count = gets.to_i
+    count.times.map { type == :passenger ? PassengerWagon.new : CargoWagon.new }
+  end
+
 
   def move_train_forvard
     return unless valid_data?(trains)

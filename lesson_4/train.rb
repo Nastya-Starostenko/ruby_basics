@@ -6,7 +6,8 @@ class Train
     @number = rand(100)
     @type = type
     @speed = 0
-    @wagons = wagons
+    @wagons = []
+    add_wagons(wagons)
   end
 
   public
@@ -19,10 +20,10 @@ class Train
     self.speed = 0
   end
 
-  def add_wagons(wagons_count)
+  def add_wagons(wagons)
     return if speed != 0
 
-    self.wagons << wagons_count.times.map { CargoWagon.new }
+    wagons.keep_if { |wagon| wagon.type == type }.each {|wagon| self.wagons << wagon}
   end
 
   def remove_wagons(wagons_count)
@@ -72,7 +73,7 @@ class Train
   end
 
   private
-  # Мы не должны изменять переменные класса без валидации данных 
+  # Мы не должны изменять переменные класса без валидации данных
   attr_writer :number, :route, :speed, :next_station, :previous_station, :current_station, :type
 
   def index_of_current_station
