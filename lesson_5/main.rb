@@ -27,7 +27,7 @@ class Main
     stations << Station.new('Kiev')
     routes << Route.new(stations.first, stations.last)
     wagons << CargoWagon.new
-    trains << CargoTrain.new([wagons.first])
+    trains << CargoTrain.new([wagons.first], rand(36**6).to_s(36))
   end
 
   def start
@@ -91,7 +91,7 @@ class Main
 
   def create_train(type)
     wagons = create_wagons_by_type(type)
-    trains << type == :passenger ? PassengerTrain.new(wagons) : CargoTrain.new(wagons)
+    trains << type == :passenger ? PassengerTrain.new(wagons, rand(36**6).to_s(36)) : CargoTrain.new(wagons, rand(36**6).to_s(36))
     puts "Train added: #{trains.last.info}"
   end
 

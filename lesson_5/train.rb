@@ -11,11 +11,11 @@ class Train
   @@trains = []
 
   def self.find(train_number)
-    @@trains.bsearch { |train| train.number == train_number }
+    @@trains.find { |train| train.number == train_number }
   end
 
-  def initialize(type, wagons)
-    @number = rand(36**6).to_s(36)
+  def initialize(type, wagons, number)
+    @number = number
     @type = type
     @speed = 0
     @wagons = []
