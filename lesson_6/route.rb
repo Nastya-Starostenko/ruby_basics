@@ -19,8 +19,11 @@ class Route
   end
 
   def validate!
-    raise "Route must have start station" if first_station.nil?
-    raise "Route must have finish station" if last_station.nil?
+    errors = []
+    errors << "Route must have start station" if first_station.nil?
+    errors << "Route must have finish station" if last_station.nil?
+
+    raise errors.join(".") unless errors.empty?
   end
 
   def add_station(station)

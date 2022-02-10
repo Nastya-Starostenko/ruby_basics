@@ -95,10 +95,13 @@ class Train
   attr_writer :number, :route, :speed, :next_station, :previous_station, :current_station, :type
 
   def validate!
-    raise "Number can't be blank" if number.nil?
-    raise "Number has incorrect format, should be '3 any words or digits - 2 any words or digits'"  if number !~ /(\w|\d){3}-?(\w|\d){2}/
-    raise "Type can't be blank" if type.nil?
-    raise "Train must have atleast 1 wagon" if wagons.blank?
+    errors = []
+    errors << "Number can't be blank" if number.nil?
+    errors << "Number has incorrect format, should be '3 any words or digits - 2 any words or digits'"  if number !~ /(\w|\d){3}-?(\w|\d){2}/
+    errors << "Type can't be blank" if type.nil?
+    errors << "Train must have at least 1 wagon" if wagons.empty?
+
+    raise errors.join(".") unless errors.empty?
   end
 
   def index_of_current_station

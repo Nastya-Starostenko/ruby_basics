@@ -79,11 +79,11 @@ class Main
     puts '0 - back to previous menu'
 
     input = gets.to_i
+    return if input == 0
 
     case input
     when 1 then create_train(:passenger)
     when 2 then create_train(:cargo)
-    when 0 then back_to_menu
     else
       "Error: menu has an invalid value"
     end
@@ -93,18 +93,19 @@ class Main
 
   def create_train(type)
     puts 'Put train name or put 0 for random value'
-    number = gets.to_s
+    number = gets.to_i
     wagons = create_wagons_by_type(type)
-    train_number = number == "0" ? "#{rand(36**3).to_s(36)}-#{rand(10..99)}" : number
+    train_number = number == 0 ? "#{rand(36**3).to_s(36)}-#{rand(10..99)}" : number
+
     begin
       new_train = type == :passenger ? PassengerTrain.new(wagons, train_number) : CargoTrain.new(wagons, train_number)
       trains << new_train
+      puts "Train added: #{trains.last.info}"
     rescue StandardError => e
       puts "Exeption: #{e.message}"
       create_new_train
     end
 
-    puts "Train added: #{trains.last.info}"
   end
 
   def create_station
@@ -134,7 +135,7 @@ class Main
   def back_to_menu
     puts 'Press enter to continue..'
     gets
-  end
+end
 
   def edit_route
     return unless valid_data?(routes)
