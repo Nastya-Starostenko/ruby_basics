@@ -30,7 +30,7 @@ class Main
 
     3.times { routes << Route.new(stations.sample, stations.sample) }
 
-    6.times { wagons << CargoWagon.new(50) }
+    6.times { wagons << CargoWagon.new(50)}
     6.times { wagons << PassengerWagon.new(5) }
 
     cargo_wagons = wagons.select {|w| w.type == :cargo}.each_slice(2).map(&:itself)
@@ -82,21 +82,16 @@ class Main
     filtered_wagons.each_with_index { |wagon, index| puts "#{index + 1} - wagon #{wagon.number}" }
     index = gets.to_i - 1
     wagon =  filtered_wagons[index]
-    wagon.type == :cargo ? take_volume_in_wagon(wagon) : take_place_in_wagon(wagon)
-  end
+    wagon.type == :cargo ? take_volume_in_wagon(wagon) : wagon.take_place
+    puts "Now on the wagon free places: #{wagon.free_places}, occupied places: #{wagon.occupied_places}"
 
-  def take_place_in_wagon(wagon)
-    wagon.take_the_place
-
-    puts "Now on the wagon free places: #{wagon.free_places}, occupied volume: #{wagon.occupied_places}"
   end
 
   def take_volume_in_wagon(wagon)
     puts "How much volume you want to load?"
     volume = gets.chomp.to_i
 
-    wagon.load(volume)
-    puts "Now on the wagon free volume: #{wagon.free_volume}, occupied volume: #{wagon.occupied_volume}"
+    wagon.take_place(volume)
   end
 
   def show_all_trains_on_stations(need_stations = [])
@@ -108,7 +103,7 @@ class Main
   def show_all_wagons_on_trains(need_trains = [])
     trains_for_info = need_trains.empty? ? trains : need_trains
     block = -> (x) do
-              info = x.type == :passenger ? "free places: #{x.free_places}, occupied places #{x.occupied_places}" : "free volume: #{x.free_volume}, occupied_volume: #{x.occupied_volume}"
+              info = "free places: #{x.free_places}, occupied places #{x.occupied_places}"
               puts "Wagon number: #{x.number}, type: #{ x.type},  #{info}"
             end
     trains_for_info.each { |train| puts "Train: #{train.number}"; train.action_with_wagons(&block) }
