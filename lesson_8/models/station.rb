@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
-require_relative 'manufacturer'
-require_relative 'instance_counter'
+require_relative '../modules/manufacturer'
+require_relative '../modules/instance_counter'
+require_relative '../modules/validator'
 
 class Station
   include InstanceCounter
+  include Validator
 
   attr_accessor :name, :trains
 
@@ -19,13 +21,7 @@ class Station
     @trains = trains
     validate!
     @@stations << self
-  end
-
-  def valid?
-    validate!
-    true
-  rescue StandardError
-    false
+    register_instance
   end
 
   def action_with_train(&block)
@@ -40,7 +36,8 @@ class Station
   end
 
   def info
-    "Station #{name}, count of trains: cargo: #{train_cont_by_type(types_of_train.first)}, pass: #{train_cont_by_type(types_of_train.last)} "
+    "Station #{name}, count of trains: cargo: #{train_cont_by_type(types_of_train.first)},
+ pass: #{train_cont_by_type(types_of_train.last)} "
   end
 
   def trains_by_type(type)
@@ -58,7 +55,7 @@ class Station
   end
 
   def train_cont_by_type(type)
-    trains.select { |train| train.type == type }.count
+    trains_by_type(type).count
   end
 
   def types_of_train

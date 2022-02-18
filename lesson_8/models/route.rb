@@ -1,33 +1,37 @@
-require_relative 'instance_counter.rb'
+# frozen_string_literal: true
+
+require_relative '../modules/instance_counter'
+require_relative '../modules/validator'
 
 class Route
   include InstanceCounter
+  include Validator
 
   attr_reader :stations, :number
 
-  def initialize(first_station, last_station, stations = [])
+  @@routes = []
+
+  def self.all
+    @@routes
+  end
+
+  def initialize(first_station:, last_station:, stations: [])
     @stations = [first_station, last_station]
     @number = rand(36**3)
     stations&.each { |station| add_station(station) }
-  end
-
-  def valid?
-    validate!
-    true
-  rescue
-    false
+    @@routes << self
   end
 
   def validate!
     errors = []
-    errors << "Route must have start station" if first_station.nil?
-    errors << "Route must have finish station" if last_station.nil?
+    errors << 'Route must have start station' if stations.first.nil?
+    errors << 'Route must have finish station' if stations.last.nil?
 
-    raise errors.join(".") unless errors.empty?
+    raise errors.join('.') unless errors.empty?
   end
 
   def add_station(station)
-    self.stations.insert(-2, station)
+    stations.insert(-2, station)
   end
 
   def remove_station(station)
